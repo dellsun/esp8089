@@ -1569,17 +1569,26 @@ static int esp_op_ampdu_action(struct ieee80211_hw *hw,
                                struct ieee80211_sta *sta, u16 tid, u16 *ssn,
                                u8 buf_size)
 #else
+// static int esp_op_ampdu_action(struct ieee80211_hw *hw,
+                               // struct ieee80211_vif *vif,
+                               // enum ieee80211_ampdu_mlme_action action,
+                               // struct ieee80211_sta *sta, u16 tid, u16 *ssn,
+                               // u8 buf_size, bool amsdu)
 static int esp_op_ampdu_action(struct ieee80211_hw *hw,
-                               struct ieee80211_vif *vif,
-                               enum ieee80211_ampdu_mlme_action action,
-                               struct ieee80211_sta *sta, u16 tid, u16 *ssn,
-                               u8 buf_size, bool amsdu)
+			    struct ieee80211_vif *vif,
+			    struct ieee80211_ampdu_params *params)
 #endif
 #endif
 #endif /* NEW_KERNEL && KERNEL_35 */
 {
         int ret = -EOPNOTSUPP;
         struct esp_pub *epub = (struct esp_pub *)hw->priv;
+		
+		enum ieee80211_ampdu_mlme_action action = params->action;
+		struct ieee80211_sta *sta = params->sta;
+		u16 tid = params->tid;
+		u16 *ssn = params->ssn;
+		u8 buf_size = params->buf_size;
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 28))
         struct esp_node * node = (struct esp_node *)sta->drv_priv;
 #else
